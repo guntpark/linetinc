@@ -51,12 +51,27 @@ main(int argc, char *argv[])
 	}
 	
 	int i = 0;
+    int recv_len, recv_cnt;
 	for(; i < 3; i++)
 	{
-		write(sock, sendMsg[i], strlen(sendMsg[i]));
-		str_len = read(sock, message, BUF_SIZE - 1);
-		message[str_len] = 0;
-		printf("Massage from [%s]!", message);
+		str_len = write(sock, sendMsg[i], strlen(sendMsg[i]));
+		//str_len = read(sock, message, BUF_SIZE - 1);
+		//message[str_len] = 0;
+	    //printf("Massage from [%s]!", message);
+	    //korea pc
+
+        recv_len = 0;
+        while (recv_len < str_len)
+        {
+            recv_cnt = read(sock, message, BUF_SIZE - 1);
+            if(recv_cnt == -1)
+            {
+		        fprintf(stderr, "read error()\n"); exit(1);
+            }
+            recv_len += recv_cnt;
+            message[recv_len] = 0;
+            printf("Massage from [%s]!\n", message);
+        }
 	}
 
 	close(sock);
