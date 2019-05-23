@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-#define BUF_SIZE 1024
+#define BUF_SIZE 100 
 
 char *sendMsg[] = 
 {
@@ -20,7 +20,7 @@ main(int argc, char *argv[])
 	int sock;
 
 	char message[BUF_SIZE];
-	int str_len;
+	//int str_len;
 
 	struct sockaddr_in serv_adr;
 
@@ -51,15 +51,30 @@ main(int argc, char *argv[])
 	}
 	
 	int i = 0;
-    int recv_len, recv_cnt;
+    int send_len = 0;
+    //int recv_len, recv_cnt;
 	for(; i < 3; i++)
 	{
-		str_len = write(sock, sendMsg[i], strlen(sendMsg[i]));
-		//str_len = read(sock, message, BUF_SIZE - 1);
-		//message[str_len] = 0;
-	    //printf("Massage from [%s]!", message);
-	    //korea pc
+        //send_len = 0;
+        //recv_len = 0;
+        int j = 0;    
+		for (; j < strlen(sendMsg[i]); j++)
+        {
+            //printf("%c", sendMsg[i][j]);
+                
+		    //send_len += write(sock, &sendMsg[i][j], 1);
+		    send_len += sendto(sock, &sendMsg[i][j], 1, 0, (struct sockaddr*)&serv_adr, sizeof(serv_adr));
+        }
 
+        printf("first send_len : %d\n", send_len);
+        printf("\n\n\n\n");
+
+        
+        
+        //korea pc
+
+        /*    
+		str_len = write(sock, sendMsg[i], strlen(sendMsg[i]));
         recv_len = 0;
         while (recv_len < str_len)
         {
@@ -72,7 +87,12 @@ main(int argc, char *argv[])
             message[recv_len] = 0;
             printf("Massage from [%s]!\n", message);
         }
+        */
 	}
+    read(sock, message, BUF_SIZE - 1);
+	printf("Massage from [%s]!", message);
+	    
+
 
 	close(sock);
 	return 0;
